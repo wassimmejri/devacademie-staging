@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-server
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db-dumbs:/docker-entrypoint-initdb.d  # Import auto des dumps au démarrage
+
+  wordpress-app:
+    image: wordpress:php8.2-apache
+    container_name: wordpress-app
+    depends_on:
+      - db
+    ports:
+      - "8085:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: rootpass
+      WORDPRESS_DB_NAME: sc3ighb1166_wpdevac
+      WORDPRESS_TABLE_PREFIX: wpb4_            # si tu veux spécifier le prefix exact
+      WORDPRESS_DEBUG: "true"                   # active debug WP (optionnel)
+      # Clés secrètes, si tu veux, sinon WP en génère automatiquement
+      WORDPRESS_AUTH_KEY: 'mbshzvamyjj2w9mtjyquah2qdhjogqkyprypdroxfhewi19scfgmkeerwzmrq1tp'
+      WORDPRESS_SECURE_AUTH_KEY: 'wcetvoa55qwspzct3dfnfgjmthofviihm8rjo6kw0cdu3ix6h4dfkrvcbch3vwf0'
+      WORDPRESS_LOGGED_IN_KEY: 'fzuocdxnxmhbef4kldrz1shxtm7nxilpjnwkohhj9wkvniyeznlt7dkjngmvo9s0'
+      WORDPRESS_NONCE_KEY: 'jp3ucdk1jkg3xyidmqmxgfb0l8jeeggpahhi8oqrwva8eo4m08m7yqv4dr4dqprr'
+      WORDPRESS_AUTH_SALT: 'gxqa6ud2f3qsj6jyep4ocx8ylbgyxsy5cbh7ha4bzpqxmaojjprlvolzkvwbgwta'
+      WORDPRESS_SECURE_AUTH_SALT: 'icfn7dunm9xywhs9jexxbewyljrcbwtmxqyyaymaq2nrzaydfznr5d657hr4zujj'
+      WORDPRESS_LOGGED_IN_SALT: 'qqwusr3cn8z0asbyhvvhonlxghsqldkm2dyyompdpaz842fyaza6ol6jo1qydlop'
+      WORDPRESS_NONCE_SALT: 'ldxs44nf9twa6owlb1lavh1ma2i1q7ktytdrubgenzc0bokt0mabhveki8km10v6'
+    volumes:
+    - "./ForMax_Code_Source/devacademie.org:/var/www/html"
+    restart: always
+
+
+  moodle:
+    image: bitnami/moodle:4
+    container_name: moodle-app
+    depends_on:
+      - db
+    ports:
+      - "8888:8080"
+    environment:
+      MOODLE_DATABASE_TYPE: mysqli
+      MOODLE_DATABASE_HOST: db
+      MOODLE_DATABASE_PORT: 3306
+      MOODLE_DATABASE_NAME: sc3ighb1166_moodle
+      MOODLE_DATABASE_USER: root
+      MOODLE_DATABASE_PASSWORD: rootpass
+      MOODLE_USERNAME: admin
+      MOODLE_PASSWORD: Admin@123
+      MOODLE_EMAIL: admin@example.com
+      PHP_DATE_TIMEZONE: Europe/Paris
+    volumes:
+      - ./outlying_formax:/bitnami/moodle
+      - ./moodledata_outlying_formax:/bitnami/moodledata
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    depends_on:
+      - db
+    ports:
+      - "9091:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: rootpass
+      UPLOAD_LIMIT: 64M
+    restart: always
+
+volumes:
+  db_data:
