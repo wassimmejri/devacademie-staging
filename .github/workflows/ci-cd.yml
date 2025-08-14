@@ -24,4 +24,4 @@ jobs:
         run: composer require --dev phpstan/phpstan
 
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse
+        run: vendor/bin/phpstan analyse -c ForMax_Code_Source/devacademie.org/phpstan.neon
