@@ -89,7 +89,12 @@ define('WP_DEBUG_DISPLAY', true);
 define('WP_HOME', 'http://localhost:8085');
 define('WP_SITEURL', 'http://localhost:8085');
 
+define( 'FS_METHOD', 'direct' );
+define('WP_DISABLE_FATAL_ERROR_HANDLER', true);
 
+
+
+define('WP_MEMORY_LIMIT', '256M');
 /* That's all, stop editing! Happy publishing. */
 
 /** Absolute path to the WordPress directory. */

@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: mysql:8.0
-    container_name: mysql-server
+    container_name: mysql-server-new
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
@@ -13,7 +13,7 @@ services:
 
   wordpress-app:
     image: wordpress:php8.2-apache
-    container_name: wordpress-app
+    container_name: wordpress-app-new
     depends_on:
       - db
     ports:
@@ -35,17 +35,17 @@ services:
       WORDPRESS_LOGGED_IN_SALT: 'qqwusr3cn8z0asbyhvvhonlxghsqldkm2dyyompdpaz842fyaza6ol6jo1qydlop'
       WORDPRESS_NONCE_SALT: 'ldxs44nf9twa6owlb1lavh1ma2i1q7ktytdrubgenzc0bokt0mabhveki8km10v6'
     volumes:
-    - "./ForMax_Code_Source/devacademie.org:/var/www/html"
+    - "./ForMax_Code_Source/devacademie.org:/var/www/html:rw"
     restart: always
 
 
   moodle:
     image: bitnami/moodle:4
-    container_name: moodle-app
+    container_name: moodle-app-new
     depends_on:
       - db
     ports:
-      - "8888:8080"
+      - "8889:8080"
     environment:
       MOODLE_DATABASE_TYPE: mysqli
       MOODLE_DATABASE_HOST: db
@@ -64,11 +64,11 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    container_name: phpmyadmin-new
     depends_on:
       - db
     ports:
-      - "9091:80"
+      - "9099:80"
     environment:
       PMA_HOST: db
       PMA_USER: root

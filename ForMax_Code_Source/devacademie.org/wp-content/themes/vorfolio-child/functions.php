@@ -918,4 +918,4 @@ add_action('rest_api_init', function () {
             return is_user_logged_in();
         }
     ]);
-});
+});// test écriture
