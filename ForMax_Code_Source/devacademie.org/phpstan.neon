@@ -5,3 +5,6 @@ parameters:
         - wp-content/plugins
     excludePaths:
         - wp-content/plugins/create-block-theme/*
+    ignoreErrors:
+        - '#Function esc_html_e not found#'
+        - '#Function checked not found#'
