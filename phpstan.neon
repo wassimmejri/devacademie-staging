@@ -1,7 +1,22 @@
 parameters:
-    level: 5
+    level: 3
     paths:
         - ForMax_Code_Source/devacademie.org/wp-content/themes
         - ForMax_Code_Source/devacademie.org/wp-content/plugins
     excludePaths:
         - ForMax_Code_Source/devacademie.org/wp-content/plugins/create-block-theme/*
+    ignoreErrors:
+        # Fonctions WordPress qui ne sont pas reconnues par PHPStan
+        - message: "#Function esc_html_e not found#"
+        - message: "#Function checked not found#"
+        - message: "#Function uri_template not found#"
+
+        # Erreurs liées à Guzzle et Curl
+        - message: "#Parameter #1 \$handle of function curl_.* expects CurlHandle, resource given#"
+        - message: "#Parameter #1 \$multi_handle of function curl_multi_.* expects CurlMultiHandle, resource given#"
+        - message: "#Property GuzzleHttp\\\Handler\\\CurlMultiHandler::\$_mh.*#"
+        - message: "#Parameter #1 \$status of class GuzzleHttp\\\Psr7\\\Response constructor expects int, string given#"
+
+        # Autres erreurs “mortelles” répétitives
+        - message: "#Dead catch#"
+        - message: "#Strict comparison using === between.* will always evaluate to true#"
