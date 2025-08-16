@@ -1,6 +1,10 @@
 <?php defined('MOODLE_INTERNAL') || die();
  $configuration = array (
+<<<<<<< HEAD
   'siteidentifier' => 'b3fa0071cc2fb769ab9d241d81660148',
+=======
+  'siteidentifier' => '487b63d559cc6f873c58679f98069a33',
+>>>>>>> f027ac822 (Sauvegarde avant pull)
   'stores' => 
   array (
     'default_application' => 

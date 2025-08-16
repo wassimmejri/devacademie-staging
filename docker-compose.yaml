@@ -35,7 +35,7 @@ services:
       WORDPRESS_LOGGED_IN_SALT: 'qqwusr3cn8z0asbyhvvhonlxghsqldkm2dyyompdpaz842fyaza6ol6jo1qydlop'
       WORDPRESS_NONCE_SALT: 'ldxs44nf9twa6owlb1lavh1ma2i1q7ktytdrubgenzc0bokt0mabhveki8km10v6'
     volumes:
-    - "./ForMax_Code_Source/devacademie.org:/var/www/html:rw"
+    - "./ForMax_Code_Source/devacademie.org:/var/www/html"
     restart: always
 
 

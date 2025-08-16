@@ -59,7 +59,7 @@ function shortcode_icone_utilisateur_devacademie() {
                 <?php elseif (in_array('um_mentor', $user_info->roles)) : ?>
                     <a href="<?php echo esc_url(site_url('/page/')); ?>">Mon profil</a>
                     <a href="<?php echo esc_url(site_url('/mentor-dashboard/')); ?>">Tableau de bord</a>
-                    <a href="<?php echo esc_url(wp_logout_url(home_url())); ?>">Se déconnecter</a>
+                    <a href="<?php echo esc_url(wp_logout_url(home_url())); ?>">Se déconnecteeeer</a>
 
                 <?php elseif (in_array('um_apprenant', $user_info->roles)) : ?>
                     <a href="<?php echo esc_url(site_url('/profil')); ?>" id="menu-profil-link">Profil</a>
