@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Récupérer le code
+      # 1️⃣ Récupérer le codee
       - name: Checkout code
         uses: actions/checkout@v3
 
