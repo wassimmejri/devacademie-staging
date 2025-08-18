@@ -34,19 +34,6 @@ jobs:
       - name: Set build version
         run: echo "BUILD_VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      # 6️⃣ (Optionnel) Builder une image Docker taggée
-      - name: Build Docker image
-        run: docker build -t mon-projet:${{ env.BUILD_VERSION }} .
-
-      # 7️⃣ (Optionnel) Pousser l’image Docker
-      - name: Push Docker image
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker push mon-projet:${{ env.BUILD_VERSION }}
-
       # 8️⃣ (Optionnel) Créer un tag Git automatique
       - name: Create Git tag
         if: github.ref == 'refs/heads/main'
