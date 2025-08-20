@@ -1,7 +1,12 @@
-name: Create and Push Tag Automatically
+name: Create and Push Tag
 
 on:
   workflow_dispatch:
+    inputs:
+      type:
+        description: 'Type of version bump (major, minor, patch)'
+        required: false
+        default: 'patch'
 
 permissions:
   contents: write
@@ -12,39 +17,42 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # nécessaire pour récupérer tous les tags
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Determine next tag version
-        id: get_next_tag
+      - name: Determine new version
+        id: new_version
         run: |
-          # Récupérer le dernier tag
-          LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0")
+          TYPE="${{ github.event.inputs.type }}"
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
-
-          # Extraire les parties major/minor
+          
           MAJOR=$(echo $LAST_TAG | cut -d. -f1 | sed 's/v//')
           MINOR=$(echo $LAST_TAG | cut -d. -f2)
           PATCH=$(echo $LAST_TAG | cut -d. -f3)
-
-          # Incrémenter le patch
-          PATCH=$((PATCH + 1))
-          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
-          echo "Next tag will be: $NEW_TAG"
-
-          # Exporter pour les étapes suivantes
+          
+          if [ "$TYPE" == "major" ]; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif [ "$TYPE" == "minor" ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          else
+            PATCH=$((PATCH + 1))
+          fi
+          
+          NEW_TAG="v$MAJOR.$MINOR.$PATCH"
+          echo "New tag: $NEW_TAG"
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Create and push tag
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          echo "Creating tag $NEW_TAG"
           git tag $NEW_TAG
           git remote set-url origin https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}.git
           git push origin --tags
