@@ -1,4 +1,4 @@
-name: Create and Push Tag
+name: Versioning and Release
 
 on:
   workflow_dispatch:
@@ -12,10 +12,10 @@ permissions:
   contents: write
 
 jobs:
-  tag:
+  tag-and-release:
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Récupérer le code et tous les tags
+      # 1️⃣ Checkout complet avec tous les tags
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
@@ -33,18 +33,13 @@ jobs:
         id: new_version
         run: |
           TYPE="${{ github.event.inputs.type }}"
-          
-          # Récupérer tous les tags
-          git fetch --tags
-
-          # Obtenir le dernier tag sémantique
-          LAST_TAG=$(git tag --sort=-v:refname | head -n1 || echo "v0.0.0")
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "Last tag: $LAST_TAG"
-          
+
           MAJOR=$(echo $LAST_TAG | cut -d. -f1 | sed 's/v//')
           MINOR=$(echo $LAST_TAG | cut -d. -f2)
           PATCH=$(echo $LAST_TAG | cut -d. -f3)
-          
+
           if [ "$TYPE" == "major" ]; then
             MAJOR=$((MAJOR + 1))
             MINOR=0
@@ -55,7 +50,7 @@ jobs:
           else
             PATCH=$((PATCH + 1))
           fi
-          
+
           NEW_TAG="v$MAJOR.$MINOR.$PATCH"
           echo "New tag: $NEW_TAG"
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
@@ -68,3 +63,11 @@ jobs:
           git tag $NEW_TAG
           git remote set-url origin https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}.git
           git push origin $NEW_TAG
+
+      # 5️⃣ Créer une release GitHub à partir du tag
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
