@@ -1,4 +1,4 @@
-name: Create and Push Tag
+name: Create and Push Tag Automatically
 
 on:
   workflow_dispatch:
@@ -12,18 +12,39 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # nécessaire pour récupérer tous les tags
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Determine next tag version
+        id: get_next_tag
+        run: |
+          # Récupérer le dernier tag
+          LAST_TAG=$(git describe --tags --abbrev=0 || echo "v0.0")
+          echo "Last tag: $LAST_TAG"
+
+          # Extraire les parties major/minor
+          MAJOR=$(echo $LAST_TAG | cut -d. -f1 | sed 's/v//')
+          MINOR=$(echo $LAST_TAG | cut -d. -f2)
+          PATCH=$(echo $LAST_TAG | cut -d. -f3)
+
+          # Incrémenter le patch
+          PATCH=$((PATCH + 1))
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "Next tag will be: $NEW_TAG"
+
+          # Exporter pour les étapes suivantes
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+
       - name: Create and push tag
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          VERSION="v1.1"
-          echo "Creating tag $VERSION"
-          git tag $VERSION
+          echo "Creating tag $NEW_TAG"
+          git tag $NEW_TAG
           git remote set-url origin https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}.git
           git push origin --tags
