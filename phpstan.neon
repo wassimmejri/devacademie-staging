@@ -1,5 +1,5 @@
 parameters:
-    level: 5
+    level: 3
     paths:
         - ForMax_Code_Source/devacademie.org/wp-content/themes
         - ForMax_Code_Source/devacademie.org/wp-content/plugins
