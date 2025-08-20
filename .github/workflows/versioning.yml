@@ -1,0 +1,29 @@
+name: Versioning
+
+on:
+  workflow_dispatch: # Lancer manuellement si tu veux
+  push:
+    branches:
+      - main  # Tu peux aussi limiter aux merges sur main
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Create Git tag
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          VERSION="v1.${{ github.run_number }}"
+          echo "Creating tag $VERSION"
+          git tag $VERSION
+          git push https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}.git --tags
