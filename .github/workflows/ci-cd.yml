@@ -12,35 +12,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Récupérer le codee
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer PHP
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
 
-      # 3️⃣ Installer PHPStan
       - name: Install dependencies
         run: composer require --dev phpstan/phpstan
 
-      # 4️⃣ Lancer l'analyse PHPStan
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse -c ForMax_Code_Source/devacademie.org/phpstan.neon || true
-
-      # 5️⃣ Définir la version du build à partir du commit Git
-      - name: Set build version
-        run: echo "BUILD_VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      # 8️⃣ (Optionnel) Créer un tag Git automatique
-      - name: Create Git tag
-        if: github.ref == 'refs/heads/main'
-        env:
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git tag v1.${{ github.run_number }}
-          git push https://$PAT_TOKEN@github.com/wassimmejri/devacademie-staging.git --tags
