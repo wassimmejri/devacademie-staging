@@ -12,16 +12,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Récupérer le code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2️⃣ Installer PHP
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
 
+      # 3️⃣ Installer PHPStan
       - name: Install dependencies
         run: composer require --dev phpstan/phpstan
 
+      # 4️⃣ Lancer l'analyse PHPStan
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse -c ForMax_Code_Source/devacademie.org/phpstan.neon || true
+
+      # 5️⃣ Notification Slack
+      - name: Notify Slack
+        if: always()  # Toujours exécuté, même si le job échoue
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
