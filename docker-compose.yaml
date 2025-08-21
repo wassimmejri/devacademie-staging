@@ -23,9 +23,9 @@ services:
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: rootpass
       WORDPRESS_DB_NAME: sc3ighb1166_wpdevac
-      WORDPRESS_TABLE_PREFIX: wpb4_            # si tu veux spécifier le prefix exact
+      WORDPRESS_TABLE_PREFIX: wpb4_            # sii tu veux spécifier le prefix exact
       WORDPRESS_DEBUG: "true"                   # active debug WP (optionnel)
-      # Clés secrètes, si tu veux, sinon WP en génère automatiquement
+      # Clés secrètes, si tu veux, sinon WP en génère automatiquementtt
       WORDPRESS_AUTH_KEY: 'mbshzvamyjj2w9mtjyquah2qdhjogqkyprypdroxfhewi19scfgmkeerwzmrq1tp'
       WORDPRESS_SECURE_AUTH_KEY: 'wcetvoa55qwspzct3dfnfgjmthofviihm8rjo6kw0cdu3ix6h4dfkrvcbch3vwf0'
       WORDPRESS_LOGGED_IN_KEY: 'fzuocdxnxmhbef4kldrz1shxtm7nxilpjnwkohhj9wkvniyeznlt7dkjngmvo9s0'
