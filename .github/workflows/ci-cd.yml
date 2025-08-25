@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted   # <-- utilise ton runner self-hosted
     steps:
       # 1️⃣ Récupérer le code
       - name: Checkout code
@@ -24,24 +24,21 @@ jobs:
 
       # 3️⃣ Installer PHPStan
       - name: Install dependencies
-        run: composer require --dev phpstan/phpstan
+        run: composer install
+        working-directory: ./ForMax_Code_Source/devacademie.org
 
       # 4️⃣ Lancer l'analyse PHPStan
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse -c ForMax_Code_Source/devacademie.org/phpstan.neon || true
+        run: vendor/bin/phpstan analyse -c phpstan.neon || true
+        working-directory: ./ForMax_Code_Source/devacademie.org
 
-      # 5️⃣ Déploiement sur la VM via SSH
-      - name: Deploy to VM
+      # 5️⃣ Déploiement sur la VM (directement, pas besoin de SSH)
+      - name: Deploy docker-compose
         if: github.ref == 'refs/heads/main'
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SSH_HOST}}       # IP publique ou DNS de ta VM
-          username: ${{ secrets.SSH_USER }}                  #  Mon utilisateur sur la VM
-          key: ${{ secrets.SSH_KEY }}     # Clé privée ajoutée dans GitHub Secrets
-          script: |
-            cd /opt/devacademie
-            git pull origin main
-            sudo systemctl restart devacademie
+        run: |
+          cd /opt/devacademie
+          git pull origin main
+          sudo systemctl restart devacademie
 
       # 6️⃣ Notification Slack
       - name: Notify Slack
