@@ -36,7 +36,7 @@ jobs:
       - name: Deploy docker-compose
         if: github.ref == 'refs/heads/main'
         run: |
-          cd /opt/devacademie
+          cd /opt/devacademie/devacademie-staging
           git pull origin main
           sudo systemctl restart devacademie
 
