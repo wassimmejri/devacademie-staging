@@ -9,14 +9,14 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       # 1️⃣ Récupérer le code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Installer PHP
+      # 2️⃣ Installer PHP pour l’analyse statique
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -30,9 +30,22 @@ jobs:
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse -c ForMax_Code_Source/devacademie.org/phpstan.neon || true
 
-      # 5️⃣ Notification Slack
+      # 5️⃣ Déploiement sur la VM via SSH
+      - name: Deploy to VM
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST}}       # IP publique ou DNS de ta VM
+          username: deploy                   # Ton utilisateur sur la VM
+          key: ${{ secrets.SSH_KEY }}     # Clé privée ajoutée dans GitHub Secrets
+          script: |
+            cd /opt/devacademie
+            git pull origin main
+            sudo systemctl restart devacademie
+
+      # 6️⃣ Notification Slack
       - name: Notify Slack
-        if: always()  # Toujours exécuté, même si le job échoue
+        if: always()
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
