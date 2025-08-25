@@ -36,7 +36,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST}}       # IP publique ou DNS de ta VM
-          username: deploy                   # Ton utilisateur sur la VM
+          username: ${{ secrets.SSH_USER }}                  #  utilisateur sur la VM
           key: ${{ secrets.SSH_KEY }}     # Clé privée ajoutée dans GitHub Secrets
           script: |
             cd /opt/devacademie
