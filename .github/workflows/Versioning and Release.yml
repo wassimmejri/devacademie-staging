@@ -1,4 +1,4 @@
-name: Versioning and Release
+name: Versioning and Releases
 
 on:
   workflow_dispatch:
