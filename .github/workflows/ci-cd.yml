@@ -35,13 +35,14 @@ jobs:
         run: vendor/bin/phpstan analyse -c phpstan.neon || true
         working-directory: ./ForMax_Code_Source/devacademie.org
 
-      # 5️⃣ Déploiement sur la VM (directement, pas besoin de SSH)
       - name: Deploy docker-compose
         if: github.ref == 'refs/heads/main'
         run: |
           cd /opt/devacademie/devacademie-staging
-          git pull origin main
-          sudo /bin/systemctl restart devacademie
+          git fetch --all
+          git reset --hard origin/main
+          sudo systemctl restart devacademie
+
 
       # 6️⃣ Notification Slack
       - name: Notify Slack
