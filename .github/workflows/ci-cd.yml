@@ -21,6 +21,10 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
+          tools: composer
+          coverage: none
+          # ne tente pas d’installer PHP via sudo
+
 
       # 3️⃣ Installer PHPStan
       - name: Install dependencies
