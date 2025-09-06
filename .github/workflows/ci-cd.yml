@@ -38,7 +38,7 @@ jobs:
         run: |
           cd /opt/devacademie/devacademie-staging
           git pull origin main
-          sudo systemctl restart devacademie
+          sudo /bin/systemctl restart devacademie
 
       # 6️⃣ Notification Slack
       - name: Notify Slack
