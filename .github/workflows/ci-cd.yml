@@ -30,6 +30,10 @@ jobs:
         run: composer install
         working-directory: ./ForMax_Code_Source/devacademie.org
 
+        # 4️⃣ Rendre PHPStan exécutable
+      - name: Make PHPStan executable
+        run: chmod +x ./ForMax_Code_Source/devacademie.org/vendor/bin/phpstan
+
       # 4️⃣ Lancer l'analyse PHPStan
       - name: Run PHPStan
         run: vendor/bin/phpstan analyse -c phpstan.neon || true
