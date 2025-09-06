@@ -17,13 +17,12 @@ jobs:
         uses: actions/checkout@v3
 
       # 2️⃣ Installer PHP pour l’analyse statique
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          tools: composer
-          coverage: none
-          # ne tente pas d’installer PHP via sudo
+# 2️⃣ Vérifier PHP et Composer
+      - name: Check PHP & Composer
+        run: |
+          php -v
+          composer -V
+
 
 
       # 3️⃣ Installer PHPStan
