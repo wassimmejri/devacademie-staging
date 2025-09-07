@@ -45,7 +45,7 @@ jobs:
           cd /opt/devacademie/devacademie-staging
           git fetch --all
           git reset --hard origin/main
-          systemctl  restart devacademie 
+          sudo systemctl restart devacademie 
 
 
       # 6️⃣ Notification Slack
