@@ -36,7 +36,7 @@ jobs:
 
       # 4️⃣ Lancer l'analyse PHPStan
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --no-progress --memory-limit=1G || echo "PHPStan finished with issues"
+        run: vendor/bin/phpstan analyse -c phpstan.neon --no-progress --memory-limit=4G || echo "PHPStan finished with issues"
         working-directory: ./ForMax_Code_Source/devacademie.org
 
       - name: Deploy docker-compose
